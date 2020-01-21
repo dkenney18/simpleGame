@@ -1,17 +1,18 @@
 package baseClasses;
 
+import player.Player;
+import weapon.Weapon;
+
+import java.util.ArrayList;
+
 public class Entity {
     String name;
     double health;
-    double damage;
+
 
     //set
     public void setHealth(double health) {
         this.health = health;
-    }
-
-    public void setDamage(double damage) {
-        this.damage = damage;
     }
 
     public void setName(String name) {
@@ -22,10 +23,6 @@ public class Entity {
 
     public String getName() {
         return name;
-    }
-
-    public double getDamage() {
-        return damage;
     }
 
     public double getHealth() {

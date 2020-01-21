@@ -3,7 +3,9 @@ package game;
 import armor.Armor;
 import baseClasses.Food;
 import baseClasses.Item;
+import baseClasses.Minerals;
 import food.Apple;
+import minerals.*;
 import mob.Mob;
 import player.Player;
 import storage.Backpack;
@@ -34,6 +36,7 @@ public class game {
 
         //set up mobs
         Mob darkMob = new Mob();
+        darkMob.setCoinDropped(10);
 
         //set up inventory
         Backpack inventory = new Backpack();
@@ -44,6 +47,22 @@ public class game {
 
         //setup game methods
         GameMethods gameMethods = new GameMethods();
+
+        //set up minerals
+        ArrayList<Minerals> minerals = new ArrayList<>();
+        Diamond diamond = new Diamond();
+        Emerald emerald = new Emerald();
+        Gold gold = new Gold();
+        Iron iron = new Iron();
+        Ruby ruby = new Ruby();
+        Oynx oynx = new Oynx();
+
+        minerals.add(diamond);
+        minerals.add(emerald);
+        minerals.add(gold);
+        minerals.add(iron);
+        minerals.add(ruby);
+        minerals.add(oynx);
 
         //armor set
         Helmet.setCost(10);
@@ -107,12 +126,6 @@ public class game {
         axe.setDamage(6);
         axe.setWeaponType(Weapon.WeaponType.AXE);
 
-        //setup player
-        player.setBackpack(inventory);
-        player.setDamage(1.0);
-        player.setHealth(100.0);
-        player.setName("Raix");
-
         //setup food
         apple.setCost(1);
         apple.setDurability(1);
@@ -139,9 +152,55 @@ public class game {
 
         foods.add(apple);
 
+        //setup player
+        player.setBackpack(inventory);
+        player.setDamage();
+        player.addHealth();
+        player.setName("Raix");
+
+        //set up Minerals
+        diamond.setMineralType(Minerals.MineralType.DIAMOND);
+        diamond.setName("diamond");
+        diamond.setValue(500);
+        diamond.setMineralRarity(Minerals.MineralRarity.RARE);
+
+        emerald.setMineralType(Minerals.MineralType.EMERALD);
+        emerald.setName("emerald");
+        emerald.setValue(1000);
+        emerald.setMineralRarity(Minerals.MineralRarity.LEGENDARY);
+
+        gold.setMineralType(Minerals.MineralType.GOLD);
+        gold.setName("gold");
+        gold.setValue(100);
+        gold.setMineralRarity(Minerals.MineralRarity.UNCOMMON);
+
+        iron.setMineralType(Minerals.MineralType.IRON);
+        iron.setName("iron");
+        iron.setValue(25);
+        iron.setMineralRarity(Minerals.MineralRarity.COMMON);
+
+        oynx.setMineralType(Minerals.MineralType.ONYX);
+        oynx.setName("oynx");
+        oynx.setValue(10000);
+        oynx.setMineralRarity(Minerals.MineralRarity.LEGENDARY);
+
+        ruby.setMineralType(Minerals.MineralType.RUBY);
+        ruby.setName("ruby");
+        ruby.setValue(700);
+        ruby.setMineralRarity(Minerals.MineralRarity.RARE);
+
         while (true) {
             Scanner sc = new Scanner(System.in);
-            System.out.println("Enter any key to exit, enter sa to shop armor, sw to shop weapons, and sf to shop food, and f to fight");
+
+            System.out.println("Enter any key to exit, enter sa to shop armor, " +
+                    "sw to shop weapons, and sf to shop food, fo to forge, ua to upgrade armor, uw to upgrade weapons," +
+                    "and f to fight");
+
+            System.out.println("player health: " + player.getHealth());
+            System.out.println("player damage: " + player.getDamage());
+            
+            player.showItemInventory();
+
             String ans = sc.nextLine();
 
             if (ans.equals("sa".toLowerCase())) {
@@ -159,7 +218,11 @@ public class game {
             }
             else if (ans.equals("f".toLowerCase())) {
 
-                gameMethods.fight(darkMob);
+                gameMethods.fight(darkMob, player);
+
+            } else if (ans.equals("fo".toLowerCase())) {
+
+                gameMethods.forage(player, minerals);
 
             } else {
                 break;

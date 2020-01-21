@@ -2,13 +2,17 @@ package game;
 
 import armor.Armor;
 import baseClasses.Food;
+import baseClasses.Minerals;
+import minerals.Ruby;
 import mob.Mob;
 import player.Player;
 import storage.Backpack;
 import weapon.Weapon;
 
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Scanner;
+import java.util.stream.IntStream;
 
 public class GameMethods {
 
@@ -87,7 +91,6 @@ public class GameMethods {
 
                 } else if (!player.RightHandFilled) {
                     buyWeapon(player, weapons, ans);
-
                     player.RightHandFilled = true;
                     player.setRightHand(weapons.get(ans));
                     break;
@@ -133,19 +136,114 @@ public class GameMethods {
 
 
     //set up fighting
-    public void fight(Mob mob) {
+    public void fight(Mob mob, Player player) {
+        int monstersBeat = 0;
+        int coinsGathered = 0;
 
+        System.out.println("Fighting: " + mob.getName());
+
+        while (player.getHealth() > 0) {
+            player.setHealth((player.getHealth() - mob.getDamage()));
+            mob.setHealth((mob.getHealth() - player.getDamage()));
+            if (mob.getHealth() <= 0) {
+                monstersBeat += 1;
+                coinsGathered += mob.getCoinDropped();
+                player.setCoins(player.getCoins() + mob.getCoinDropped());
+                mob.setHealth(50);
+            }
+             if (player.getHealth() <= 0) {
+                 System.out.println("You died!");
+                 break;
+             }
+        }
+        System.out.println("You beat: " + monstersBeat + " monster(s) and gathered: " + coinsGathered + " coin(s)");
+        player.addHealth();
     }
 
     //set up foraging
-    public void forage(Player player, Backpack inventory) {
+    public void forage(Player player, ArrayList<Minerals> mineralsArrayList) {
 
-    }
+        //this sets up a very simple but effective way to create loot chances
+        Random rand = new Random();
+        int chancesForCommon = rand.nextInt(3);
+        int chancesForUncommon = rand.nextInt(500);
+        int chancesForRare = rand.nextInt(1000);
+        int chancesForLegendary =  rand.nextInt(10000);
+
+        ArrayList<Minerals> commonMinerals = new ArrayList<>();
+        ArrayList<Minerals> uncommonMinerals = new ArrayList<>();
+        ArrayList<Minerals> rareminerals = new ArrayList<>();
+        ArrayList<Minerals> legendaryMinerals = new ArrayList<>();
+
+        //sets up a lists of mineral rarity to give you a random item from it
+        for (int i = 0; i < mineralsArrayList.size() ; i++) {
+
+            if (mineralsArrayList.get(i).getMineralRarity() == Minerals.MineralRarity.COMMON)
+            {
+                commonMinerals.add(mineralsArrayList.get(i));
+
+            } else if (mineralsArrayList.get(i).getMineralRarity() == Minerals.MineralRarity.UNCOMMON) {
+
+                uncommonMinerals.add(mineralsArrayList.get(i));
+
+            } else if (mineralsArrayList.get(i).getMineralRarity() == Minerals.MineralRarity.RARE) {
+
+                rareminerals.add(mineralsArrayList.get(i));
+
+            } else if (mineralsArrayList.get(i).getMineralRarity() == Minerals.MineralRarity.LEGENDARY) {
+
+                legendaryMinerals.add(mineralsArrayList.get(i));
+            }
+        }
+        while (true) {
+
+            chancesForCommon = rand.nextInt(10);
+            chancesForUncommon = rand.nextInt(50);
+            chancesForRare = rand.nextInt(100);
+            chancesForLegendary =  rand.nextInt(1000);
+            Scanner sc = new Scanner(System.in);
+
+            //common items
+            if (chancesForCommon == 1) {
+                System.out.println(rand.nextInt(commonMinerals.size()));
+                 player.itemArrayList.add(commonMinerals.get(rand.nextInt(commonMinerals.size())));
+                System.out.println("Yay you found a common mineral");
+            }
+
+            //uncommon items
+            if (chancesForUncommon == 40) {
+                System.out.println(rand.nextInt(uncommonMinerals.size()));
+                player.itemArrayList.add(uncommonMinerals.get(rand.nextInt(uncommonMinerals.size())));
+                System.out.println("Yay you found an uncommon mineral");
+            }
+
+            //rare items
+            if (chancesForRare == 70) {
+                System.out.println(rand.nextInt(rareminerals.size()));
+                player.itemArrayList.add(rareminerals.get(rand.nextInt(rareminerals.size())));
+                System.out.println("Yay you found a rare mineral");
+            }
+
+            //chances for legendary
+            if (chancesForLegendary == 5000) {
+                System.out.println(rand.nextInt(legendaryMinerals.size()));
+                player.itemArrayList.add(legendaryMinerals.get(rand.nextInt(legendaryMinerals.size())));
+                System.out.println("Yay you found a legendary mineral");
+            }
+
+            System.out.println("press any key to continue press e to exit");
+            String ans = sc.nextLine();
+            if (ans.equals("e".toLowerCase())) {
+                break;
+            }
+        }
+        }
 
     //buy armor
     private void buyArmor(Player player, ArrayList<Armor> armors, int ans) {
         player.armorArrayList.add(armors.get(ans));
         player.setCoins((player.getCoins() - armors.get(ans).getCost()));
+        player.addHealth();
         System.out.println("Bought: " + armors.get(ans).getName());
     }
 
@@ -153,11 +251,11 @@ public class GameMethods {
     private void buyWeapon(Player player, ArrayList<Weapon> weapons, int ans) {
         player.weaponArrayList.add(weapons.get(ans));
         player.setCoins((player.getCoins() - weapons.get(ans).getCost()));
+        player.setDamage();
         System.out.println("Bought: " + weapons.get(ans).getName());
     }
 
     //buy food
-
     private void buyFood(Player player, ArrayList<Food> foods, int ans) {
         player.foodArrayList.add(foods.get(ans));
         player.setCoins((player.getCoins() - foods.get(ans).getCost()));

@@ -12,7 +12,11 @@ public class Backpack extends Item {
         return items;
     }
 
-    public void setItems(ArrayList<Item> items) {
+    public void setItems() {
         this.items = items;
+    }
+
+    public void addItem(Item item) {
+        items.add(item);
     }
 }
