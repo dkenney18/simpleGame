@@ -1,2 +1,3 @@
 # simpleGame
-a simple game to experiment with good programming desgin
+a simple game to experiment with good programming design
+This project is in progress
