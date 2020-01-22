@@ -162,26 +162,31 @@ public class game {
         diamond.setMineralType(Minerals.MineralType.DIAMOND);
         diamond.setName("diamond");
         diamond.setValue(500);
+        diamond.setCount(0);
         diamond.setMineralRarity(Minerals.MineralRarity.RARE);
 
         emerald.setMineralType(Minerals.MineralType.EMERALD);
         emerald.setName("emerald");
         emerald.setValue(1000);
+        emerald.setCount(0);
         emerald.setMineralRarity(Minerals.MineralRarity.LEGENDARY);
 
         gold.setMineralType(Minerals.MineralType.GOLD);
         gold.setName("gold");
         gold.setValue(100);
+        gold.setCount(0);
         gold.setMineralRarity(Minerals.MineralRarity.UNCOMMON);
 
         iron.setMineralType(Minerals.MineralType.IRON);
         iron.setName("iron");
         iron.setValue(25);
+        iron.setCount(0);
         iron.setMineralRarity(Minerals.MineralRarity.COMMON);
 
         oynx.setMineralType(Minerals.MineralType.ONYX);
         oynx.setName("oynx");
         oynx.setValue(10000);
+        oynx.setCount(0);
         oynx.setMineralRarity(Minerals.MineralRarity.LEGENDARY);
 
         ruby.setMineralType(Minerals.MineralType.RUBY);
@@ -198,7 +203,7 @@ public class game {
 
             System.out.println("player health: " + player.getHealth());
             System.out.println("player damage: " + player.getDamage());
-            
+
             player.showItemInventory();
 
             String ans = sc.nextLine();
@@ -223,6 +228,14 @@ public class game {
             } else if (ans.equals("fo".toLowerCase())) {
 
                 gameMethods.forage(player, minerals);
+
+            } else if (ans.equals("ua".toLowerCase())) {
+
+                gameMethods.UpgradeArmor(player);
+
+            } else if (ans.equals("uw".toLowerCase())) {
+
+                gameMethods.UpgradeWeapon(player);
 
             } else {
                 break;

@@ -2,6 +2,7 @@ package game;
 
 import armor.Armor;
 import baseClasses.Food;
+import baseClasses.Item;
 import baseClasses.Minerals;
 import minerals.Ruby;
 import mob.Mob;
@@ -9,7 +10,9 @@ import player.Player;
 import storage.Backpack;
 import weapon.Weapon;
 
+import java.awt.*;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.stream.IntStream;
@@ -130,10 +133,34 @@ public class GameMethods {
 
     }
 
-    public void UpgradeArmor(ArrayList<Armor> armors, Player player) {
+    public void UpgradeArmor(Player player) {
 
+        for (int i = 0; i < player.armorArrayList.size(); i++) {
+            System.out.println("ID: " + i + " " + player.armorArrayList.get(i).getName());
+        }
+        Scanner sc = new Scanner(System.in);
+        int ans = sc.nextInt();
+
+        if (ans <= player.armorArrayList.size()) {
+            player.setArmorLevel(ans);
+        } else {
+            System.out.println("Number is out of Bounds");
+        }
     }
 
+    public void UpgradeWeapon(Player player) throws InputMismatchException {
+        for (int i = 0; i < player.weaponArrayList.size(); i++) {
+            System.out.println("ID: " + i + " " + player.weaponArrayList.get(i).getName());
+        }
+        Scanner sc = new Scanner(System.in);
+        int ans = sc.nextInt();
+
+        if (ans <= player.weaponArrayList.size()) {
+            player.setWeaponLevel(ans);
+        } else {
+            System.out.println("Number is out of Bounds");
+        }
+    }
 
     //set up fighting
     public void fight(Mob mob, Player player) {
@@ -205,29 +232,46 @@ public class GameMethods {
 
             //common items
             if (chancesForCommon == 1) {
-                System.out.println(rand.nextInt(commonMinerals.size()));
-                 player.itemArrayList.add(commonMinerals.get(rand.nextInt(commonMinerals.size())));
+                int random = rand.nextInt(commonMinerals.size());
+
+                if (!player.itemArrayList.contains(commonMinerals.get(random))) {
+                    player.itemArrayList.add(commonMinerals.get(random));
+                }
+                commonMinerals.get(commonMinerals.size() - 1).addCount(1);
                 System.out.println("Yay you found a common mineral");
             }
 
             //uncommon items
             if (chancesForUncommon == 40) {
-                System.out.println(rand.nextInt(uncommonMinerals.size()));
-                player.itemArrayList.add(uncommonMinerals.get(rand.nextInt(uncommonMinerals.size())));
+                int random = rand.nextInt(uncommonMinerals.size());
+
+                if (!player.itemArrayList.contains(uncommonMinerals.get(random))) {
+                    player.itemArrayList.add(uncommonMinerals.get(random));
+                }
+                uncommonMinerals.get(uncommonMinerals.size() - 1).addCount(1);
                 System.out.println("Yay you found an uncommon mineral");
             }
 
+
             //rare items
             if (chancesForRare == 70) {
-                System.out.println(rand.nextInt(rareminerals.size()));
-                player.itemArrayList.add(rareminerals.get(rand.nextInt(rareminerals.size())));
+                int random = rand.nextInt(rareminerals.size());
+
+                if (!player.itemArrayList.contains(rareminerals.get(random))) {
+                    player.itemArrayList.add(rareminerals.get(random));
+                }
+                rareminerals.get(rareminerals.size() - 1).addCount(1);
                 System.out.println("Yay you found a rare mineral");
             }
 
             //chances for legendary
             if (chancesForLegendary == 5000) {
-                System.out.println(rand.nextInt(legendaryMinerals.size()));
-                player.itemArrayList.add(legendaryMinerals.get(rand.nextInt(legendaryMinerals.size())));
+                int random = rand.nextInt(legendaryMinerals.size());
+
+                if (!player.itemArrayList.contains(legendaryMinerals.get(random))) {
+                    player.itemArrayList.add(legendaryMinerals.get(random));
+                }
+                legendaryMinerals.get(legendaryMinerals.size() - 1).addCount(1);
                 System.out.println("Yay you found a legendary mineral");
             }
 
@@ -237,7 +281,7 @@ public class GameMethods {
                 break;
             }
         }
-        }
+    }
 
     //buy armor
     private void buyArmor(Player player, ArrayList<Armor> armors, int ans) {
@@ -250,6 +294,7 @@ public class GameMethods {
     //buy armor
     private void buyWeapon(Player player, ArrayList<Weapon> weapons, int ans) {
         player.weaponArrayList.add(weapons.get(ans));
+        player.weaponArrayList.get(player.weaponArrayList.size() - 1).setWeaponMaterial(Weapon.WeaponMaterial.WOOD);
         player.setCoins((player.getCoins() - weapons.get(ans).getCost()));
         player.setDamage();
         System.out.println("Bought: " + weapons.get(ans).getName());

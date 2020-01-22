@@ -6,15 +6,15 @@ public class Weapon extends Item {
     WeaponType weaponType;
     WeaponMaterial weaponMaterial;
     slot weaponSlot;
-    float damage;
+    double damage;
 
     //getters
-    public float getDamage() {
+    public double getDamage() {
         return damage;
     }
 
     //setters
-    public void setDamage(float damage) {
+    public void setDamage(double damage) {
         this.damage = damage;
     }
     //add skills later
@@ -31,8 +31,16 @@ public class Weapon extends Item {
         return weaponType;
     }
 
+    public WeaponMaterial getWeaponMaterial() {
+        return weaponMaterial;
+    }
+
     public void setWeaponType(WeaponType weaponType) {
         this.weaponType = weaponType;
+    }
+
+    public void setWeaponMaterial(WeaponMaterial weaponMaterial) {
+        this.weaponMaterial = weaponMaterial;
     }
 
     public enum WeaponType {SWORD, AXE, HAMMER, STAFF}

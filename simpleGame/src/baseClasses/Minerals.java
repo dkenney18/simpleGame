@@ -7,6 +7,7 @@ public class Minerals extends Item {
     MineralRarity mineralRarity;
     MineralType mineralType;
 
+
     public void setValue(int value) {
         this.value = value;
     }
