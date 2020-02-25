@@ -2,24 +2,19 @@ package game;
 
 import armor.Armor;
 import baseClasses.Food;
-import baseClasses.Item;
 import baseClasses.Minerals;
-import minerals.Ruby;
 import mob.Mob;
 import player.Player;
-import storage.Backpack;
 import weapon.Weapon;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Random;
 import java.util.Scanner;
-import java.util.stream.IntStream;
 
 public class GameMethods {
 
-    String message = "Enter id of item you want to buy,  enter 99 to exit";
+    final String message = "Enter id of item you want to buy, enter 99 to exit";
 
     //set up a shop to buy items
     public void shopArmor(ArrayList<Armor> armors, Player player) {
@@ -133,6 +128,56 @@ public class GameMethods {
 
     }
 
+    //change this to internet store
+    public void shopMinerals(ArrayList<Minerals> minerals, Player player) {
+
+        for (int i = 0; i < minerals.size(); i++) {
+            System.out.println("ID: " + i + " " + minerals.get(i).getName());
+        }
+
+        System.out.println(message);
+
+        while (true) {
+            Scanner sc = new Scanner(System.in);
+            int ans = sc.nextInt();
+            if (ans == 99) {
+                break;
+            } else if (ans < minerals.size()) {
+                buyMinerals(player, minerals, ans);
+                break;
+            } else {
+                System.out.println("Something went wrong");
+            }
+        }
+
+    }
+
+    //sell minerals
+    public void sellMinerals(Player player) {
+        for (int i = 0; i < player.itemArrayList.size(); i++) {
+            System.out.println("ID: " + i + " " + player.itemArrayList.get(i).getName());
+        }
+
+        System.out.println(message);
+
+        while (true) {
+            Scanner sc = new Scanner(System.in);
+            int ans = sc.nextInt();
+            if (ans == 99) {
+                break;
+            } else if (ans < player.itemArrayList.size()) {
+                int count = player.itemArrayList.get(ans).getCount();
+                System.out.println("Value: " + player.itemArrayList.get(ans).getValue());
+                player.setCoins(player.getCoins() + (player.itemArrayList.get(ans).getValue() * player.itemArrayList.get(ans).getCount()));
+
+                System.out.println("Added: " + count * player.itemArrayList.get(ans).getValue() + " coins");
+                break;
+            } else {
+                System.out.println("Something went wrong");
+            }
+        }
+    }
+
     public void UpgradeArmor(Player player) {
 
         for (int i = 0; i < player.armorArrayList.size(); i++) {
@@ -192,10 +237,10 @@ public class GameMethods {
 
         //this sets up a very simple but effective way to create loot chances
         Random rand = new Random();
-        int chancesForCommon = rand.nextInt(3);
-        int chancesForUncommon = rand.nextInt(500);
-        int chancesForRare = rand.nextInt(1000);
-        int chancesForLegendary =  rand.nextInt(10000);
+        int chancesForCommon;
+        int chancesForUncommon;
+        int chancesForRare;
+        int chancesForLegendary;
 
         ArrayList<Minerals> commonMinerals = new ArrayList<>();
         ArrayList<Minerals> uncommonMinerals = new ArrayList<>();
@@ -203,23 +248,22 @@ public class GameMethods {
         ArrayList<Minerals> legendaryMinerals = new ArrayList<>();
 
         //sets up a lists of mineral rarity to give you a random item from it
-        for (int i = 0; i < mineralsArrayList.size() ; i++) {
+        for (Minerals minerals : mineralsArrayList) {
 
-            if (mineralsArrayList.get(i).getMineralRarity() == Minerals.MineralRarity.COMMON)
-            {
-                commonMinerals.add(mineralsArrayList.get(i));
+            if (minerals.getMineralRarity() == Minerals.MineralRarity.COMMON) {
+                commonMinerals.add(minerals);
 
-            } else if (mineralsArrayList.get(i).getMineralRarity() == Minerals.MineralRarity.UNCOMMON) {
+            } else if (minerals.getMineralRarity() == Minerals.MineralRarity.UNCOMMON) {
 
-                uncommonMinerals.add(mineralsArrayList.get(i));
+                uncommonMinerals.add(minerals);
 
-            } else if (mineralsArrayList.get(i).getMineralRarity() == Minerals.MineralRarity.RARE) {
+            } else if (minerals.getMineralRarity() == Minerals.MineralRarity.RARE) {
 
-                rareminerals.add(mineralsArrayList.get(i));
+                rareminerals.add(minerals);
 
-            } else if (mineralsArrayList.get(i).getMineralRarity() == Minerals.MineralRarity.LEGENDARY) {
+            } else if (minerals.getMineralRarity() == Minerals.MineralRarity.LEGENDARY) {
 
-                legendaryMinerals.add(mineralsArrayList.get(i));
+                legendaryMinerals.add(minerals);
             }
         }
         while (true) {
@@ -286,6 +330,7 @@ public class GameMethods {
     //buy armor
     private void buyArmor(Player player, ArrayList<Armor> armors, int ans) {
         player.armorArrayList.add(armors.get(ans));
+        player.getBackpack().addItem(armors.get(ans));
         player.setCoins((player.getCoins() - armors.get(ans).getCost()));
         player.addHealth();
         System.out.println("Bought: " + armors.get(ans).getName());
@@ -295,6 +340,7 @@ public class GameMethods {
     private void buyWeapon(Player player, ArrayList<Weapon> weapons, int ans) {
         player.weaponArrayList.add(weapons.get(ans));
         player.weaponArrayList.get(player.weaponArrayList.size() - 1).setWeaponMaterial(Weapon.WeaponMaterial.WOOD);
+        player.getBackpack().addItem(weapons.get(ans));
         player.setCoins((player.getCoins() - weapons.get(ans).getCost()));
         player.setDamage();
         System.out.println("Bought: " + weapons.get(ans).getName());
@@ -303,7 +349,19 @@ public class GameMethods {
     //buy food
     private void buyFood(Player player, ArrayList<Food> foods, int ans) {
         player.foodArrayList.add(foods.get(ans));
+        player.getBackpack().addItem(foods.get(ans));
         player.setCoins((player.getCoins() - foods.get(ans).getCost()));
         System.out.println("Bought: " + foods.get(ans).getName());
+    }
+
+    //buy minerals
+    private void buyMinerals(Player player, ArrayList<Minerals> minerals, int ans) {
+        player.itemArrayList.add(minerals.get(ans));
+        player.itemArrayList.get(player.itemArrayList.size() - 1).setCount(player.itemArrayList.get(player.itemArrayList.size() - 1).getCount() + 1);
+        player.getBackpack().addItem(minerals.get(ans));
+        player.setCoins((player.getCoins() - minerals.get(ans).getValue()));
+        System.out.println("Bought: " + minerals.get(ans).getName());
+        player.showItemInventory();
+        System.out.println("Coins Left: " + player.getCoins());
     }
 }

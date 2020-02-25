@@ -1,9 +1,6 @@
 package mob;
 
 import baseClasses.Entity;
-import weapon.Weapon;
-
-import java.util.ArrayList;
 
 public class Mob extends Entity {
     int coinDropped = 0;

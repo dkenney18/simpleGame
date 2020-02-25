@@ -11,6 +11,7 @@ import player.Player;
 import storage.Backpack;
 import weapon.*;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -164,47 +165,105 @@ public class game {
         diamond.setValue(500);
         diamond.setCount(0);
         diamond.setMineralRarity(Minerals.MineralRarity.RARE);
+        diamond.setItemType(Item.ItemType.MINERAL);
 
         emerald.setMineralType(Minerals.MineralType.EMERALD);
         emerald.setName("emerald");
         emerald.setValue(1000);
         emerald.setCount(0);
         emerald.setMineralRarity(Minerals.MineralRarity.LEGENDARY);
+        emerald.setItemType(Item.ItemType.MINERAL);
 
         gold.setMineralType(Minerals.MineralType.GOLD);
         gold.setName("gold");
         gold.setValue(100);
         gold.setCount(0);
         gold.setMineralRarity(Minerals.MineralRarity.UNCOMMON);
+        gold.setItemType(Item.ItemType.MINERAL);
 
         iron.setMineralType(Minerals.MineralType.IRON);
         iron.setName("iron");
         iron.setValue(25);
         iron.setCount(0);
         iron.setMineralRarity(Minerals.MineralRarity.COMMON);
+        iron.setItemType(Item.ItemType.MINERAL);
 
         oynx.setMineralType(Minerals.MineralType.ONYX);
         oynx.setName("oynx");
         oynx.setValue(10000);
         oynx.setCount(0);
         oynx.setMineralRarity(Minerals.MineralRarity.LEGENDARY);
+        oynx.setItemType(Item.ItemType.MINERAL);
 
         ruby.setMineralType(Minerals.MineralType.RUBY);
         ruby.setName("ruby");
         ruby.setValue(700);
         ruby.setMineralRarity(Minerals.MineralRarity.RARE);
+        ruby.setItemType(Item.ItemType.MINERAL);
+
+        //create gui instance here
+        gameGui gui = new gameGui();
+        JButton buttonShopArmor = gui.createButton("Shop armor");
+        JButton buttonShopWeapons = gui.createButton("Shop Weapons");
+        JButton buttonShopFood = gui.createButton("Shop Food");
+        JButton buttonShopMinerals = gui.createButton("Shop Minerals");
+        JButton buttonForage = gui.createButton("Forage");
+        JButton buttonFight = gui.createButton("Fight");
+        JButton buttonUpgradeArmor = gui.createButton("Upgrade Armor");
+        JButton buttonUpgradeWeapon = gui.createButton("Upgrade Weapon");
+
+        JButton backButton = gui.createButton("Back");
+
+        //set actions for each button
+        buttonShopArmor.addActionListener(e -> gui.updateFrame(gameGui.frame_name.SHOP_ARMOR));
+
+        buttonShopWeapons.addActionListener(e -> gui.updateFrame(gameGui.frame_name.SHOP_WEAPONS));
+
+        buttonShopFood.addActionListener(e -> gui.updateFrame(gameGui.frame_name.SHOP_FOOD));
+
+        buttonShopMinerals.addActionListener(e -> gui.updateFrame(gameGui.frame_name.SHOP_MINERALS));
+
+        buttonForage.addActionListener(e -> gui.updateFrame(gameGui.frame_name.FORAGE));
+
+        buttonFight.addActionListener(e -> gui.updateFrame(gameGui.frame_name.FIGHT));
+
+        buttonUpgradeArmor.addActionListener(e -> gui.updateFrame(gameGui.frame_name.UPGRADE_ARMOR));
+
+        buttonUpgradeWeapon.addActionListener(e -> gui.updateFrame(gameGui.frame_name.UPGRADE_WEAPON));
+
+        backButton.addActionListener(e -> gui.updateFrame(gameGui.frame_name.HOME));
+
+        //setup gui
+        gui.setupFrames(1000,1000, 4, 8);
+
+        //add buttons to gui
+        gui.addButton(buttonShopArmor);
+        gui.addButton(buttonShopWeapons);
+        gui.addButton(buttonShopFood);
+        gui.addButton(buttonShopMinerals);
+        gui.addButton(buttonForage);
+        gui.addButton(buttonFight);
+        gui.addButton(buttonUpgradeArmor);
+        gui.addButton(buttonUpgradeWeapon);
+        gui.addButton(backButton);
+
+        //add buttons to frame
+        gui.addButtonsToFrame(gameGui.frame_name.HOME);
+
+        gui.frames.get(0).setVisible(true);
 
         while (true) {
             Scanner sc = new Scanner(System.in);
 
             System.out.println("Enter any key to exit, enter sa to shop armor, " +
-                    "sw to shop weapons, and sf to shop food, fo to forge, ua to upgrade armor, uw to upgrade weapons," +
+                    "sw to shop weapons, and sf to shop food, fo to forge, ua to upgrade armor, uw to upgrade weapons, s to open shop," +
                     "and f to fight");
 
             System.out.println("player health: " + player.getHealth());
             System.out.println("player damage: " + player.getDamage());
 
             player.showItemInventory();
+           player.getBackpack().showItems();
 
             String ans = sc.nextLine();
 
@@ -236,6 +295,14 @@ public class game {
             } else if (ans.equals("uw".toLowerCase())) {
 
                 gameMethods.UpgradeWeapon(player);
+
+            } else if (ans.equals("sm".toLowerCase())) {
+
+                gameMethods.shopMinerals(minerals, player);
+
+            } else if (ans.equals("sem".toLowerCase())) {
+
+                gameMethods.sellMinerals(player);
 
             } else {
                 break;

@@ -1,10 +1,5 @@
 package baseClasses;
 
-import player.Player;
-import weapon.Weapon;
-
-import java.util.ArrayList;
-
 public class Entity {
     String name;
     double health;

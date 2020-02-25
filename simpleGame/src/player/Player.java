@@ -4,7 +4,6 @@ import armor.Armor;
 import baseClasses.Entity;
 import baseClasses.Food;
 import baseClasses.Item;
-import baseClasses.Minerals;
 import storage.Backpack;
 import weapon.Weapon;
 
@@ -17,10 +16,10 @@ public class Player extends Entity {
     public boolean BootSlotFilled = false;
     public boolean LeftHandFilled = false;
     public boolean RightHandFilled = false;
-    public ArrayList<Armor> armorArrayList = new ArrayList<>();
-    public ArrayList<Weapon> weaponArrayList = new ArrayList<>();
-    public ArrayList<Food> foodArrayList = new ArrayList<>();
-    public ArrayList<Item> itemArrayList = new ArrayList<>();
+    public final ArrayList<Armor> armorArrayList = new ArrayList<>();
+    public final ArrayList<Weapon> weaponArrayList = new ArrayList<>();
+    public final ArrayList<Food> foodArrayList = new ArrayList<>();
+    public final ArrayList<Item> itemArrayList = new ArrayList<>();
     Weapon leftHand;
     Weapon RightHand;
     Backpack backpack;
@@ -61,8 +60,8 @@ public class Player extends Entity {
 
     public void setDamage() {
         damage = 0;
-        for (int i = 0; i < weaponArrayList.size(); i++) {
-            this.damage += weaponArrayList.get(i).getDamage();
+        for (Weapon weapon : weaponArrayList) {
+            this.damage += weapon.getDamage();
             System.out.println(damage);
         }
     }
@@ -74,19 +73,20 @@ public class Player extends Entity {
 
     public void addHealth() {
         int health = 0;
-        for (int i = 0; i < armorArrayList.size(); i++) {
-            health += armorArrayList.get(i).getHealth();
+        for (Armor armor : armorArrayList) {
+            health += armor.getHealth();
             System.out.println(health);
         }
         setHealth(health);
     }
 
     public void showItemInventory() {
-        for (int i = 0; i < itemArrayList.size(); i++) {
-            System.out.println(itemArrayList.get(i).getName() + " => " + itemArrayList.get(i).getCount());
+        for (Item item : itemArrayList) {
+            System.out.println(item.getName() + " => " + item.getCount());
         }
     }
 
+    //sets armor level to the next step and charges player accordingly
     public void setArmorLevel(int i) {
         //helmet logic
         if (armorArrayList.get(i).getArmorSlot() == Armor.ArmorSlot.HELMET) {
@@ -167,7 +167,6 @@ public class Player extends Entity {
         }
     }
 
-    //sets armor level to the next step and charges player accordingly
     public void upgradeArmor(Armor.ArmorMaterial material, int cost, Armor.ArmorSlot slot, int health, int durability, int i) {
         armorArrayList.get(i).setArmorMaterial(material);
         armorArrayList.get(i).setCost(cost);

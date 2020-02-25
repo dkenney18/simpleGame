@@ -7,11 +7,7 @@ public class Minerals extends Item {
     MineralRarity mineralRarity;
     MineralType mineralType;
 
-
-    public void setValue(int value) {
-        this.value = value;
-    }
-
+    //
     public void setMineralType(MineralType mineralType) {
         this.mineralType = mineralType;
     }
@@ -21,10 +17,6 @@ public class Minerals extends Item {
     }
 
     //get
-    public int getValue() {
-        return value;
-    }
-
     public MineralType getMineralType() {
         return mineralType;
     }

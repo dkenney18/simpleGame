@@ -1,8 +1,8 @@
 package baseClasses;
 
 public class Item {
-    public enum ItemType {WEAPON, FOOD, STORAGE, ARMOR}
-
+    public enum ItemType {WEAPON, FOOD, STORAGE, ARMOR, MINERAL}
+    int value;
     ItemType itemType;
     String name;
     int cost;
@@ -30,6 +30,11 @@ public class Item {
         return count;
     }
 
+    public int getValue() {
+        return value;
+    }
+
+
     //setters
     public void setItemType(ItemType itemType) {
         this.itemType = itemType;
@@ -54,4 +59,9 @@ public class Item {
     public void setCount(int count) {
         this.count = count;
     }
+
+    public void setValue(int value) {
+        this.value = value;
+    }
+
 }
